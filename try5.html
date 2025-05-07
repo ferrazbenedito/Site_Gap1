@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shooting Star Clean</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background: url('Foto_Floresta.png') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        #canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .centered-text {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(254, 251, 251, 0.804);
+    font-size: 3rem;
+    font-family: 'Georgia', serif;
+    text-align: center;
+    text-shadow: 2px 2px 4px #000;
+    pointer-events: none; /* So clicks go through to canvas */
+}
+
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="centered-text">Grupo Almeida Prado</div>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="missao.html">Our Mission</a></li>
+            <li><a href="sobre.html">About Us</a></li>
+            <li><a href="contato.html">Contact</a></li>
+        </ul>
+
+    <!-- Three.js and libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('canvas');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0); // Transparent background
+
+            // Example shooting stars particles (simple points)
+            const starGeometry = new THREE.BufferGeometry();
+            const starCount = 2000;
+            const positions = [];
+
+            for (let i = 0; i < starCount; i++) {
+                const x = (Math.random() - 0.5) * 1000;
+                const y = (Math.random() - 0.5) * 1000;
+                const z = -Math.random() * 1000;
+                positions.push(x, y, z);
+            }
+
+            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+
+            const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: .3 });
+            const stars = new THREE.Points(starGeometry, starMaterial);
+            scene.add(stars);
+
+            camera.position.z = 5;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // simple movement
+                stars.rotation.x += 0.0005;
+                stars.rotation.y += 0.001;
+                
+                renderer.render(scene, camera);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        });
+
+    
+    </script>
+</body>
+</html>
